@@ -90,21 +90,21 @@ classdef getPhysicsLib
             ii = V_SIndices(1); %right after interface - in stroma
                 %dVdx(ii,:) = (V(ii+1,:)-V(ii,:))./dxE;
                 d2soldx2(ii,:) = (sol(ii+1,:) - 2.*sol(ii,:) + (V_intf2b))./(dxS.^2);
-                dsoldt(ii,:) = V.DV_S.*d2soldx2(ii,:) - (V.kB + V.kL).*sol(ii,:) + I.rho*sol(I_SIndices(1),:);
+                dsoldt(ii,:) = V.DV_S.*d2soldx2(ii,:) - (V.kB).*sol(ii,:) + I.rho*sol(I_SIndices(1),:);
             
             ii = V_SIndices(2:end-1); %in stroma
                 %dVdx(ii,:) = (V(ii+1,:)-V(ii,:))./dxE;
                 d2soldx2(ii,:) = (sol(ii+1,:) - 2.*sol(ii,:) + sol(ii-1,:))./(dxS.^2);
-                dsoldt(ii,:) = V.DV_S.*d2soldx2(ii,:) - (V.kB + V.kL).*sol(ii,:) + I.rho*sol(I_SIndices(2:end-1),:);
+                dsoldt(ii,:) = V.DV_S.*d2soldx2(ii,:) - (V.kB).*sol(ii,:) + I.rho*sol(I_SIndices(2:end-1),:);
             
             ii = V_SIndices(end); %end of stroma
                 %dVdx(ii,:) = (V_intf2a-V(ii,:))./dxE;
                 d2soldx2(ii,:) = 2*(sol(ii-1,:)-sol(ii,:))./(dxS.^2);
-                dsoldt(ii,:) = V.DV_S*d2soldx2(ii,:) - (V.kB + V.kL).*sol(ii,:) + I.rho*sol(I_SIndices(end),:); %BC zero flux            
+                dsoldt(ii,:) = V.DV_S*d2soldx2(ii,:) - (V.kB).*sol(ii,:) + I.rho*sol(I_SIndices(end),:); %BC zero flux            
 
             %%%%% CELLS %%%%%%
             
-            zeta_T = 4 * pi * (T.r + V.r) .* (T.DT_T + V.DV_T); 
+            %zeta_T = 4 * pi * (T.r + V.r) .* (T.DT_T + V.DV_T); 
             % No cell diffusion
             %zeta_T = 4 * pi * (T.r + V.r) .* (V.DV_S);
 

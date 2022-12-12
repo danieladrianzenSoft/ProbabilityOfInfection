@@ -67,7 +67,7 @@ if isKey(paramMeans,"k_B") == 1
 else
     mu = 6/(24*3600);
 end
-sigma = 8/(24*3600);
+sigma = 6/(24*3600);
 
 lognormalMu = log(mu^2/(sqrt(mu^2 + sigma^2)));
 lognormalSigma = log(1+(sigma^2/mu^2));
@@ -79,9 +79,9 @@ k_B = random(t,N,1);
 %% clearance rate from blood (k_L = c)
 
 if isKey(paramMeans,"k_B") == 1
-    mu = paramMeans("k_B")/(24*3600);
+    mu = paramMeans("k_B")/(24+);
 elseif isKey(paramMeans,"c") == 1
-    mu = paramMeans("c")/(24*3600);
+    mu = paramMeans("c");
 else
     mu = 20/(24*3600);
 end
@@ -102,7 +102,7 @@ k_L = random(t,N,1);
 %% Infectivity (beta = k)
 
 if isKey(paramMeans,"beta") == 1
-    mu = paramMeans("beta")/(24*3600);
+    mu = paramMeans("beta");
 else
     mu = (0.65*10^(-6))/(24*3600); %cm^3 virion / s
 end

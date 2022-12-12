@@ -1,4 +1,21 @@
 
-Date Started: 08-Dec-2022 04:20:48
-Number of Iterations: 100
+Date Started: 11-Dec-2022 18:37:26
+Number of Iterations: 20
 Number of Batches: 4
+Batch 1 Simulation Time = 0.10 mins
+Total Running Simulation Time = 0.10 mins
+
+
+ ------------------------------- 
+
+Date Resumed: 11-Dec-2022 18:38:09
+Starting Batch: 2
+Batch 2 Simulation Time = 0.09 mins
+Total Running Simulation Time = 0.09 mins
+
+Batch 3 Simulation Time = 0.10 mins
+Total Running Simulation Time = 0.19 mins
+
+Batch 4 Simulation Time = 0.09 mins
+Total Running Simulation Time = 0.28 mins
+

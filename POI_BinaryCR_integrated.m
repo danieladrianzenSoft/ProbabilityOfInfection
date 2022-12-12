@@ -69,7 +69,7 @@ opts1 = odeset('Vectorized','on','JPattern',S);
 
 %% RUNNING SOLVER
       
-[t,sol] = ode23tb(@(t,sol) getPhysics(t,sol,IC,Geometry,Mesh,V,T,I,U), tspan, IC, opts1); %Geometry
+[t,sol] = ode15s(@(t,sol) getPhysics(t,sol,IC,Geometry,Mesh,V,T,I,U), tspan, IC, opts1); %Geometry
 sol = sol';
 
 %Virions & Cells

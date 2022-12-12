@@ -27,29 +27,29 @@ classdef getJacobianLib
                     J(i,i+1) = (V.DV_L / (dxL^2)) * (V.DV_E/(V.DV_E*V.phi_LT+V.DV_L));
                 elseif i == Mesh.numL+1
                     J(i,i-1) = V.DV_E / (dxE^2) * (V.DV_L / (V.DV_L/V.phi_LT + V.DV_E));
-                    J(i,i) = V.DV_E / (dxE^2) * ((V.DV_E / (V.DV_L/V.phi_LT + V.DV_E))-2) - V.kL;
+                    J(i,i) = V.DV_E / (dxE^2) * ((V.DV_E / (V.DV_L/V.phi_LT + V.DV_E))-2);
                     J(i,i+1) = V.DV_E / (dxE^2);
                 elseif (i > Mesh.numL+1 && i < Mesh.numL + Mesh.numE)
                     J(i,i-1) = V.DV_E / (dxE^2);
-                    J(i,i) = -2*(V.DV_E / (dxE^2)) - V.kL;
+                    J(i,i) = -2*(V.DV_E / (dxE^2));
                     J(i,i+1) = V.DV_E / (dxE^2);
                 elseif i == Mesh.numL+Mesh.numE
                     J(i,i-1) = V.DV_E / (dxE^2);
-                    J(i,i) = (V.DV_E / (dxE^2))*(V.DV_E/(V.DV_S+V.DV_E) - 2) - V.kL;
+                    J(i,i) = (V.DV_E / (dxE^2))*(V.DV_E/(V.DV_S+V.DV_E) - 2);
                     J(i,i+1) = (V.DV_E / (dxE^2))*(V.DV_S/(V.DV_S+V.DV_E));
                 elseif i == V_SIndices(1)
                     J(i,i-1) = (V.DV_S / (dxS^2))*(V.DV_E / (V.DV_E+V.DV_S));
-                    J(i,i) = (V.DV_S / (dxS^2))*(-2 + (V.DV_S / (V.DV_E+V.DV_S))) - (V.kB + V.kL);
+                    J(i,i) = (V.DV_S / (dxS^2))*(-2 + (V.DV_S / (V.DV_E+V.DV_S))) - (V.kB);
                     J(i,i+1) = (V.DV_S / (dxS^2));
                     J(i,i+2*Mesh.numS) = I.rho;
                 elseif (i > V_SIndices(1) && i < V_SIndices(end))
                     J(i,i-1) = V.DV_S / (dxS^2);
-                    J(i,i) = -2*(V.DV_S / (dxS^2)) - (V.kB + V.kL);
+                    J(i,i) = -2*(V.DV_S / (dxS^2)) - (V.kB);
                     J(i,i+1) = (V.DV_S / (dxS^2));
                     J(i,i+2*Mesh.numS) = I.rho;
                 elseif i == V_SIndices(end)
                     J(i,i-1) = 2*V.DV_S / (dxS^2);
-                    J(i,i) = -2*(V.DV_S / (dxS^2)) - (V.kB + V.kL);
+                    J(i,i) = -2*(V.DV_S / (dxS^2)) - (V.kB);
                     J(i,i+1) = 0;
                     J(i,i+2*Mesh.numS) = I.rho;
                 elseif i == T_SIndices(1)
