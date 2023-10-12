@@ -56,7 +56,7 @@ meshSize = 800;
 %% TEMPORAL PARAMETRIZATION
 
 numTimeSteps = 1000;
-finalT = 20*24*60*60; %45 days in seconds
+finalT = 90*24*60*60; %45 days in seconds
 tvec = linspace(0,finalT,numTimeSteps);
 tspan = [min(tvec),max(tvec)];
 % t_sample = [0:1:10*60,...
@@ -112,13 +112,13 @@ sol = sol';
 [vir, drug, drugdp, tar, inf, chem, vir_b, drug_b, drugdp_b, tar_b, inf_b] = getResults(sol, Mesh, 1);
 
 if makePlots == 1
-    settingLabels = ["showVvsTime", "showVvsX", "showDvsTime", "showDdpvsTime", "showUvsTime", "showCellsvsTime","showVvsTime_b", "showDvsTime_b","showDdpvsTime_b","showqvsTime_b","showCellsvsTime_b"];
+    settingLabels = ["showVvsTime", "showVvsX", "showDvsTime", "showDdpvsTime", "showUvsTime", "showCellsvsTime","showVvsTime_b", "showDvsTime_b","showDdpvsTime_b","showCellsvsTime_b"];
     if drugApplied == 1 
-        settingValues = [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1];
+        settingValues = [1, 1, 1, 1, 0, 1, 1, 1, 1, 1];
     else
-        settingValues = [1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1];
+        settingValues = [1, 1, 0, 0, 0, 1, 1, 0, 0, 1];
     end
-    settingValues = [0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0];
+    settingValues_test = [1,0,0,0,0,1,0]
     settings = dictionary(settingLabels, settingValues);
     createLinePlots(t/3600, Mesh, T, vir, drug, drugdp, chem, tar, inf, vir_b, drug_b, drugdp_b, tar_b, inf_b, settings)
     %createHeatmap(t/3600, Mesh, drug, [zeros(Mesh.numL,length(t));drugdp], vir, drugApplied)

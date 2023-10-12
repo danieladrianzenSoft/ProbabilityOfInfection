@@ -1,8 +1,7 @@
-function createHeatmap(t,Mesh,DrugTissue,DrugDPTissue,HIVTissue,drugApplied)
+function createHeatmap(t,x,DrugTissue,DrugDPTissue,HIVTissue,drugApplied)
 
-    x = Mesh.x;
-    endT = 18; %days
-    [XX,YY] = meshgrid(t/24,x);
+    endT = 72; %hours
+    [XX,YY] = meshgrid(t,x);
     %ZZ_V = real(log10(HIVTissue));
     %ZZ_V(ZZ_V<0)=0;
     ZZ_V = HIVTissue;
@@ -14,18 +13,8 @@ function createHeatmap(t,Mesh,DrugTissue,DrugDPTissue,HIVTissue,drugApplied)
 
     cm = getCustomColormap(800,"colormap","purple-teal");
 
-    indLE = Mesh.numL;
-    indES = Mesh.numL+Mesh.numE;
-    lineLE_X = [min(t),max(t)];
-    lineLE_Y = x(indLE).*ones(2,1);
-    lineES_X = [min(t),max(t)];
-    lineES_Y = x(indES).*ones(2,1);
-    lineColor = [0.84,0.84,0.84];
-    xTickVec = [0,5,10,15,20];
-
       if drugApplied == 1
          f1 = figure();
-         f1.Position = [383,363,793,627];
          ax1 = axes('Parent',f1);
          %ZZ_D = log10(DrugTissue);  
          %ZZ_D(ZZ_D<0) = 0;
@@ -35,122 +24,96 @@ function createHeatmap(t,Mesh,DrugTissue,DrugDPTissue,HIVTissue,drugApplied)
          CTopDrug = floor(max(max(ZZ_D))) + floor( max(max(ZZ_D)-floor(max(max(ZZ_D))))/0.5) * 0.5;
          %ax1 = nexttile;
          %contourf(XX,YY,ZZ_1,'LineColor','none')
-         %surf(ax1,XX,YY,ZZ_D,'EdgeColor','none')
-         p = pcolor(ax1,XX,YY,ZZ_D);
-         set(p, 'EdgeColor', 'none');
+         surf(ax1,XX,YY,ZZ_D,'EdgeColor','none')
          title('TFV Concentration (ng/ml)','FontSize',22,'FontWeight','Bold')
          view([0,90])
          set(gca,'Ydir','reverse')
          xlim([0,endT])
          ylim([0,max(x)])
-         clim(ax1,[1e1,1e7])
-         xticks(ax1,xTickVec)
-         yticks(ax1,[0,0.1,0.2,0.3])
+         xticks(ax1,[0,24,48,72])
          colormap(ax1,'hot')
+         colorbar('Ticks',[10e1,10e3,10e5,10e7])
          set(gca,'ColorScale','log')
-         colorbar('Ticks',[1e1,1e3,1e5,1e7])
          %clim(ax1,[0,CTopDrug])
-         xlabel('Time (days)','FontSize',40,'FontWeight','Bold')
+         %clim(ax1,[0,inf])
+         xlabel('Time (hrs)','FontSize',40,'FontWeight','Bold')
          ylabel('Depth (cm)','FontSize',40,'FontWeight','Bold')
          XT = get(gca,'XTick');
          set(gca,'FontSize',40)
          YT = get(gca,'YTick');
          set(gca,'FontSize',40)
-         hold on
-         plot(ax1,lineLE_X,lineLE_Y,'LineWidth',2,'Color',lineColor,'LineStyle','--')
-         plot(ax1,lineES_X,lineES_Y,'LineWidth',2,'Color',lineColor,'LineStyle','--')
 
          f2 = figure();
-         f2.Position = [383,363,793,627];
          ax2 = axes('Parent',f2);
-         ZZ_DP = DrugDPTissue;  
-         ZZ_DP(ZZ_DP<0) = 0;
-         %ZZ_DP = DrugDPTissue;
+         %ZZ_DP = log10(DrugDPTissue);  
          %ZZ_DP(ZZ_DP<0) = 0;
-         %surf(ax2,XX,YY,ZZ_DP,'EdgeColor','none')
-         p = pcolor(ax2,XX,YY,ZZ_DP);
-         set(p, 'EdgeColor', 'none');
+         ZZ_DP = log10(DrugDPTissue);
+         ZZ_DP(ZZ_DP<0) = 0;
+         surf(ax2,XX,YY,ZZ_DP,'EdgeColor','none')
          title('TFV-DP Concentration (ng/ml)','FontSize',22,'FontWeight','Bold')
          view([0,90])
          set(gca,'Ydir','reverse')
          xlim([0,endT])
          ylim([0,max(x)])
-         clim(ax2,[1e-1,1e5])
-         xticks(ax2,xTickVec)
-         yticks(ax2,[0,0.1,0.2,0.3])
+         xticks(ax2,[0,24,48,72])
          colormap(ax2,'winter')
+         colorbar
          set(gca,'ColorScale','log')
-         colorbar(ax2,'Ticks',[1e0,1e2,1e4])
-         xlabel('Time (days)','FontSize',40,'FontWeight','Bold')
+         %clim(ax2,[0,inf])
+         xlabel('Time (hrs)','FontSize',40,'FontWeight','Bold')
          ylabel('Depth (cm)','FontSize',40,'FontWeight','Bold')
          XT = get(gca,'XTick');
          set(gca,'FontSize',40)
          YT = get(gca,'YTick');
          set(gca,'FontSize',40)
-         hold on
-         plot(ax2,lineLE_X,lineLE_Y,'LineWidth',2,'Color',lineColor,'LineStyle','--')
-         plot(ax2,lineES_X,lineES_Y,'LineWidth',2,'Color',lineColor,'LineStyle','--')
 
          f3 = figure();
-         f3.Position = [383,363,793,627];
          ax3 = axes('Parent',f3);
          ZZ_QDP = calcQ(DrugDPTissue);  
          %ZZ_QDP(ZZ_QDP<0) = 0;
-         %surf(ax3,XX,YY,ZZ_QDP,'EdgeColor','none')
-         p = pcolor(ax3,XX,YY,ZZ_QDP);
-         set(p, 'EdgeColor', 'none');
+         surf(ax3,XX,YY,ZZ_QDP,'EdgeColor','none')
          title('Drug efficacy','FontSize',22,'FontWeight','Bold')
          view([0,90])
          set(gca,'Ydir','reverse')
          xlim([0,endT])
          ylim([0,max(x)])
-         clim(ax3,[0,1])
-         xticks(ax3,xTickVec)
-         yticks(ax3,[0,0.1,0.2,0.3])
+         xticks(ax3,[0,24,48,72])
          colormap(ax3,'parula')
-         colorbar(ax3,'Ticks',[0,0.5,1])
-         xlabel('Time (days)','FontSize',40,'FontWeight','Bold')
+         colorbar
+         %clim(ax1,[0,inf])
+         xlabel('Time (hrs)','FontSize',40,'FontWeight','Bold')
          ylabel('Depth (cm)','FontSize',40,'FontWeight','Bold')
          XT = get(gca,'XTick');
          set(gca,'FontSize',40)
          YT = get(gca,'YTick');
          set(gca,'FontSize',40)
-         hold on
-         plot(ax3,lineLE_X,lineLE_Y,'LineWidth',2,'Color',lineColor,'LineStyle','--')
-         plot(ax3,lineES_X,lineES_Y,'LineWidth',2,'Color',lineColor,'LineStyle','--')
 
       end
 
          %ax2 = nexttile;
          f = figure();
-         f.Position = [383,363,793,627];
          ax = axes('Parent',f);
          %contourf(XX,YY,ZZ_2,'LineColor','none')
-         %surf(ax,XX,YY,ZZ_V,'EdgeColor','none')
-         p = pcolor(ax,XX,YY,ZZ_V);
-         set(p, 'EdgeColor', 'none');
+         surf(ax,XX,YY,ZZ_V,'EdgeColor','none')
          title(ax,'Viral Load (virions/ml)','FontSize',22,'FontWeight','Bold')
          view([0,90])
          set(gca,'Ydir','reverse')
          xlim([0,endT])
          ylim([0,max(x)])
-         clim(ax,[1e-2,1e5])
-         xticks(ax,xTickVec)
-         yticks(ax,[0,0.1,0.2,0.3])
+         xticks(ax,[0,24,48,72])
          colormap(ax,'pink')
-         colorbar(ax,'Ticks',[1e-2,1e0,1e2,1e4])
+         colorbar
          set(gca,'ColorScale','log')
          %clim(ax2,[0,CTopHIV])
-         xlabel('Time (days)','FontSize',40,'FontWeight','Bold')
+         %clim(ax,[0,inf])
+         xlabel('Time (hrs)','FontSize',40,'FontWeight','Bold')
          ylabel('Depth (cm)','FontSize',40,'FontWeight','Bold')
          XT = get(gca,'XTick');
          set(gca,'FontSize',40)
          YT = get(gca,'YTick');
          set(gca,'FontSize',40)
          %ah = axes;
-         hold on
-         plot(ax,lineLE_X,lineLE_Y,'LineWidth',2,'Color',lineColor,'LineStyle','--')
-         plot(ax,lineES_X,lineES_Y,'LineWidth',2,'Color',lineColor,'LineStyle','--')
+         hold on;
          
       % else
       % 

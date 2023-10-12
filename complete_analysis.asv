@@ -14,7 +14,7 @@
     readParamMeansFromFile = 1;
 
     N = 30000;
-    tictocStep = 5000;
+    tictocStep = 2500;
     batchSize = 5000;
    
     %N = 20;
@@ -261,79 +261,24 @@
         % C_G0 = 1e7;
         % T_VD = -1*60*60;
 
-        % EXAMPLE WEAK +VE INFECTION
-
-        % V_0 = 5000;
-        % h_E = 0.02;
-        % rho = 0.030;
-        % k_B = 0.000035;
-        % k_L = 0.00035;
-        % beta = 2.4E-11;
-        % T0_B = 5000;
-        % T0_T = 1000;
-        % 
-        % w = (1e-5)/(24*3600);
-        % C_G0 = 1e7;
-        % T_VD = -2*60*60;
-
-        % EXAMPLE STRONG +VE INFECTION TISSUE FIRST
-
-        % V_0 = 4000;
-        % h_E = 0.02;
-        % rho = 0.025;
-        % k_B = 0.00005;
-        % k_L = 0.0002;
-        % beta = 4E-11;
-        % T0_B = 4000;
-        % T0_T = 2000;
-        % 
-        % w = (1e-5)/(24*3600);
-        % C_G0 = 0;
-        % T_VD = 0;
-
-        % EXAMPLE STRONG +VE INFECTION BLOOD FIRST
-        % V_0 = 5000;
-        % h_E = 0.02;
-        % rho = 0.010;
-        % k_B = 0.00008;
-        % k_L = 0.0002;
-        % beta = 2E-10;
-        % T0_B = 5000;
-        % T0_T = 1000;
-        % 
-        % w = (1e-5)/(24*3600);
-        % C_G0 = 0;
-        % T_VD = 0;
-
-
-        % EXAMPLE -VE INFECTION
+        % VARIATION OF +VE INFECTION
 
         V_0 = 5000;
         h_E = 0.02;
-        rho = 0.010;
-        k_B = 0.0001;
-        k_L = 0.0004;
-        beta = 1E-11;
+        rho = 0.030;
+        k_B = 0.000035;
+        k_L = 0.00035;
+        beta = 2.4E-11;
         T0_B = 5000;
         T0_T = 1000;
+
         w = (1e-5)/(24*3600);
+        %C_G0 = 1e7;
+        %T_VD = -1*60*60;
         %C_G0 = 0;
         %T_VD = 0;
         C_G0 = 1e7;
-        T_VD = 0;
-
-        % V_0 = 5000;
-        % h_E = 0.02;
-        % rho = 0.010;
-        % k_B = 0.00008;
-        % k_L = 0.0002;
-        % beta = 2E-10;
-        % T0_B = 5000;
-        % T0_T = 1000;
-        % 
-        % w = (1e-5)/(24*3600);
-        % C_G0 = 0;
-        % T_VD = 0;
+        T_VD = -2*60*60;
 
         % V_0 = 1e4;
         % T0_B = 5e3;

@@ -7,4 +7,4 @@
 
 module load Matlab/R2022b
 
-matlab -nodisplay -nodesktop -r "run /hpc/group/katzlab/POI/Analysis_v1/complete_analysis.m"
+matlab -nodisplay -nodesktop -r "run /hpc/group/katzlab/POI/Cluster/complete_analysis.m"

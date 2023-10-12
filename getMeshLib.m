@@ -1,11 +1,33 @@
 classdef getMeshLib
     methods(Static)
+        function [Mesh, totalSize] = createMesh_LES_Drug(geometry,meshSize)
+            Mesh = Discretization1D;
+            Mesh.numElements = meshSize;
+            Mesh.numEpithelium = ceil(((geometry.h_L + geometry.h_E) / (geometry.h_L + geometry.h_T)) * meshSize) - ...
+               (ceil((geometry.h_L / (geometry.h_L + geometry.h_T) * meshSize)));
+            if Mesh.numEpithelium < 40
+                Mesh.numEpithelium = 40;
+            end
+            Mesh.numLumen = ceil((geometry.h_L/(geometry.h_L+geometry.h_T))*meshSize);
+
+            Mesh.numStroma = meshSize - (Mesh.numLumen + Mesh.numEpithelium);
+            Mesh.numTissue = Mesh.numEpithelium + Mesh.numStroma;
+            Mesh.x = [linspace(0, geometry.h_L, Mesh.numLumen), ...
+                 linspace(geometry.h_L + (geometry.h_E / Mesh.numEpithelium), geometry.h_L + geometry.h_E, Mesh.numEpithelium) ...
+                 linspace(geometry.h_L + geometry.h_E + (geometry.h_S / Mesh.numStroma), geometry.h_L + geometry.h_T, Mesh.numStroma)];
+            Mesh = Mesh.setSymbols();
+            totalSize = 2 * Mesh.numX + Mesh.numT + 2 * Mesh.numS + 5; 
+        end
         function [Mesh, totalSize] = createMesh_LES(geometry, meshSize)
             Mesh = Discretization1D;
             Mesh.numElements = meshSize;
-            Mesh.numLumen = ceil((geometry.h_L/(geometry.h_L+geometry.h_T))*meshSize);
             Mesh.numEpithelium = ceil(((geometry.h_L + geometry.h_E) / (geometry.h_L + geometry.h_T)) * meshSize) - ...
                (ceil((geometry.h_L / (geometry.h_L + geometry.h_T) * meshSize)));
+            if Mesh.numEpithelium < 40
+                Mesh.numEpithelium = 40;
+            end
+            Mesh.numLumen = ceil((geometry.h_L/(geometry.h_L+geometry.h_T))*meshSize);
+
             Mesh.numStroma = meshSize - (Mesh.numLumen + Mesh.numEpithelium);
             Mesh.numTissue = Mesh.numEpithelium + Mesh.numStroma;
             Mesh.x = [linspace(0, geometry.h_L, Mesh.numLumen), ...

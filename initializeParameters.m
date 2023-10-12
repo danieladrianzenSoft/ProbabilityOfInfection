@@ -1,10 +1,29 @@
 
-function [V, T, I, U, Geometry] = initializeParameters(params)
+function [V, T, I, U, D, Geometry] = initializeParameters(params)
     V = initializeVirus(params);
     T = initializeTargetCells(params);
     I = initializeInfectedCells(params);
     U = initializeChemokine(params);
+    D = initializeDrug(params);
     Geometry = initializeGeometry(params);
+end
+
+function D = initializeDrug(params)
+    D = Drug;
+    D.initialLumenConcentration = params.C_G0;
+    D.diffCoeffLumen = 6*10^(-6);
+    D.diffCoeffEpithelium = 7*10^(-8);
+    D.diffCoeffStroma = 4*10^(-7);
+    D.partitionLumenEpthelium = 0.75;
+    D.partitionEpitheliumStroma = 1;
+    D.lossDilutionInLumen = 1.22/3600;
+    D.lossStromaToBlood = 0.119/3600;
+    D.lossClearanceInBlood = 1.41/3600;
+    D.volumeOfDistribution = 75*1000;
+    D.rateActivation = log(2)/3600;
+    D.rateDeactivation = log(2)/(7*24*3600);
+    D.ratioActivationFromDeactivated = 0.1;
+    D = D.setSymbols();
 end
 
 function V = initializeVirus(params)
@@ -32,10 +51,10 @@ function T = initializeTargetCells(params)
     T = TCell;
     %T.initialTissueConcentration = 10^(4)*1.088*10^(3)*1/100; %T_0 *1.088*10^(3)*1/100 cells/ml
     %T.initialTissueConcentration = 5e5;
-    T.initialTissueConcentration = 1e3;
+    T.initialTissueConcentration = params.T0_T;
     %T.initialBloodConcentration = 2e6; %T_0 PBMC
     %T.initialBloodConcentration = 1e6; %T_0 PBMC Between 500-1500cells/mm3 AIDS CD4+ Count, Guzman, 2022
-    T.initialBloodConcentration = 1e4;
+    T.initialBloodConcentration = params.T0_B;
     T.volumeFractionTissue = 0.1; %phiDP_S = 0.1; jing 2D 
     T.deathRateTissue = 0.01/(24*3600); %s^(-1)
     T.deathRateBlood = 0.01/(24*3600); %s^(-1)
@@ -60,7 +79,9 @@ function I = initializeInfectedCells(params)
     %I.deathRateBlood = 0.5/(25*3600);
     I.diffCoeffTissue = (3*10^(-4))/(3600*(10)^2); %3e-4 haugh et al, 2006
     I.lossTissueToBlood = 0.1/3600; %1/hr approximated
-    I.cellToCellInfection = 10^(-3)/(24*3600); %s^(-1) per infected cell. Viral transmission
+    %I.cellToCellInfection = (1e-3)/(24*3600); %s^(-1) per infected cell. Viral transmission
+    %I.cellToCellInfection = (2e-4)/(24*3600); % USING THIS AS DEFAULT
+    I.cellToCellInfection = params.w;
     I = I.setSymbols();
 end
 
@@ -81,6 +102,8 @@ function Geometry = initializeGeometry(params)
     Geometry.thicknessTissue = Geometry.thicknessEpithelium + Geometry.thicknessStroma;
     Geometry.width = 3.35; % w cm
     Geometry.length = 13; %l cm
+    Geometry.volumeFractionCellsEpithelium = 0.95; %phi_e
+    Geometry.volumeFractionCellsStroma = 0.1; %phi_s
     Geometry = Geometry.setSymbols();
 end
 

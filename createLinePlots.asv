@@ -227,62 +227,49 @@ function createLinePlots(t, Mesh, T_params, vir, drug, drugdp, chem, tar_cell, i
     %% SYSTEMIC - PLOTTING D VS TIME
 
     if settings("showDvsTime") == 1
-        conc = 1e-4:1e0:1e6;
-        q = calcQ(conc);
-        f = figure();
-        f.Position = [383,363,793,627];
-        ax = axes('Parent',f);
-        cm = getCustomColormap(1);
-        semilogx(ax, conc, q, 'color', cm(1,:), 'LineWidth',lineWidth)
-        xlabel('Conc (fmol/mg)','FontSize',40,'FontWeight','Bold')
-        %ylabel('TFV in Blood (ng/ml)','FontSize',40,'FontWeight','Bold')
-        title('TFV-DP Dose Response','FontSize',40,'FontWeight','Bold')
-        ylabel('q','FontSize',40,'FontWeight','Bold')
-        set(gca,'FontSize',40)
-        xlim([1e-2,1e6])
-        xticks([1e-2,1e0,1e2,1e4,1e6])
-        ylim([0,1])
+        conc = 10e-10:1e
+
     end
 
-    if settings("showDvsTime_b") == 1
-        f = figure();
-        f.Position = [383,363,793,627];
-        ax = axes('Parent',f);
-        cm = getCustomColormap(1);
-        plot(ax, t, drug_b*(1e3/287.213), 'color', cm(1,:), 'LineWidth',lineWidth)
-        xlabel('Time (hrs)','FontSize',40,'FontWeight','Bold')
-        %ylabel('TFV in Blood (ng/ml)','FontSize',40,'FontWeight','Bold')
-        title('TFV in Blood','FontSize',40,'FontWeight','Bold')
-        ylabel('Conc (fmol/mg)','FontSize',40,'FontWeight','Bold')
-        set(gca,'FontSize',40)
-        xlim([0,24])
-    end
-    if settings("showDdpvsTime_b") == 1
-        % Drug: TFV-DP
-        f = figure();
-        f.Position = [383,363,793,627];
-        ax = axes('Parent',f);
-        cm = getCustomColormap(1);
-        plot(ax, t, drugdp_b*(1e3/447.17), 'color', cm(1,:), 'LineWidth',lineWidth)
-        xlabel('Time (hrs)','FontSize',40,'FontWeight','Bold')
-        title('TFV-DP in Blood','FontSize',40,'FontWeight','Bold')
-        ylabel('Conc (fmol/mg)','FontSize',40,'FontWeight','Bold')
-        set(gca,'FontSize',40)
-        xlim([0,24])
-    end
-    if settings("showqvsTime_b") == 1
-        % Drug: TFV-DP
-        f = figure();
-        f.Position = [383,363,793,627];
-        ax = axes('Parent',f);
-        cm = getCustomColormap(1);
-        plot(ax, t, calcQ(drugdp_b), 'color', cm(1,:), 'LineWidth',lineWidth)
-        xlabel('Time (hrs)','FontSize',40,'FontWeight','Bold')
-        title('Drug Efficacy q in Blood','FontSize',40,'FontWeight','Bold')
-        ylabel('Conc (fmol/mg)','FontSize',40,'FontWeight','Bold')
-        set(gca,'FontSize',40)
-        xlim([0,24])
-    end
+    % if settings("showDvsTime_b") == 1
+    %     f = figure();
+    %     f.Position = [383,363,793,627];
+    %     ax = axes('Parent',f);
+    %     cm = getCustomColormap(1);
+    %     plot(ax, t, drug_b*(1e3/287.213), 'color', cm(1,:), 'LineWidth',lineWidth)
+    %     xlabel('Time (hrs)','FontSize',40,'FontWeight','Bold')
+    %     %ylabel('TFV in Blood (ng/ml)','FontSize',40,'FontWeight','Bold')
+    %     title('TFV in Blood','FontSize',40,'FontWeight','Bold')
+    %     ylabel('Conc (fmol/mg)','FontSize',40,'FontWeight','Bold')
+    %     set(gca,'FontSize',40)
+    %     xlim([0,24])
+    % end
+    % if settings("showDdpvsTime_b") == 1
+    %     % Drug: TFV-DP
+    %     f = figure();
+    %     f.Position = [383,363,793,627];
+    %     ax = axes('Parent',f);
+    %     cm = getCustomColormap(1);
+    %     plot(ax, t, drugdp_b*(1e3/447.17), 'color', cm(1,:), 'LineWidth',lineWidth)
+    %     xlabel('Time (hrs)','FontSize',40,'FontWeight','Bold')
+    %     title('TFV-DP in Blood','FontSize',40,'FontWeight','Bold')
+    %     ylabel('Conc (fmol/mg)','FontSize',40,'FontWeight','Bold')
+    %     set(gca,'FontSize',40)
+    %     xlim([0,24])
+    % end
+    % if settings("showqvsTime_b") == 1
+    %     % Drug: TFV-DP
+    %     f = figure();
+    %     f.Position = [383,363,793,627];
+    %     ax = axes('Parent',f);
+    %     cm = getCustomColormap(1);
+    %     plot(ax, t, calcQ(drugdp_b), 'color', cm(1,:), 'LineWidth',lineWidth)
+    %     xlabel('Time (hrs)','FontSize',40,'FontWeight','Bold')
+    %     title('Drug Efficacy q in Blood','FontSize',40,'FontWeight','Bold')
+    %     ylabel('Conc (fmol/mg)','FontSize',40,'FontWeight','Bold')
+    %     set(gca,'FontSize',40)
+    %     xlim([0,24])
+    % end
 
     %% SYSTEMIC - PLOTTING CELLS VS TIME
 

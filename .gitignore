@@ -1,3 +1,7 @@
 *.jpeg
 *.jpg
+*.fig
+*.png
+/Cluster
+/Plots
 B_POI.sanitized.xlsx
