@@ -1,8 +1,6 @@
 <h1>Probability of Infection</h1>
-<hr>
 
 <h2>Overview</h2>
-<hr>
 
 ProbabilityOfInfection is a collection of MATLAB functions that aims to estimate the probability of HIV-1 infection in women after sexual exposure. The model solves a system of simultaneous partial and ordinary differential equations that characterize HIV viral transport, anti-HIV drug transport, cell migration, and infection kinetics. By defining parameters as distributions and using a Monte-Carlo simulation approach, a user-defined number of simulations are run, and the number of positive infections to ultimately estimate the probability of HIV infection (POI).
 
@@ -11,7 +9,6 @@ ProbabilityOfInfection is a collection of MATLAB functions that aims to estimate
 "POI_BinaryCR_integrated.m" defines each simulation itself, and calls the corresponding functions depending on the drug administration conditions.
 
 <h2>System requirements</h2>
-<hr>
 
 <h3>Hardware requirements</h3>
 
