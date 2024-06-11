@@ -7,7 +7,7 @@ if isKey(paramMeans,"V_0") == 1
 else
     mu = 1*10^(4);
 end
-sigma = (1*10^(5)/(1*10^(4)))*mu;
+sigma = (1*10^(4)/(1*10^(4)))*mu;
 
 lognormalMu = log(mu^2/(sqrt(mu^2 + sigma^2)));
 lognormalSigma = log(1+(sigma^2/mu^2));
@@ -17,6 +17,8 @@ t=truncate(pd,10,inf);
 V_0 = random(t,N,1);
 
 %% Epithelium Thickness (h_E)
+
+% input: cm
 
 if isKey(paramMeans,"h_E") == 1
     mu = paramMeans("h_E");
@@ -38,6 +40,9 @@ h_E = random(t,N,1);
 %1999.
 
 %% Production rate of V from I (rho = pi)
+
+% input: virs/day
+% convert to: virs/s
 
 if isKey(paramMeans,"rho") == 1
     mu = paramMeans("rho")/(24*3600);
@@ -61,6 +66,8 @@ rho = random(t,N,1);
 %lymphoid tissues. De boer, 2010.
 
 %% clearance rate from tissue to blood(k_B)
+% input: /day
+% convert to: /s
 
 if isKey(paramMeans,"k_B") == 1
     mu = paramMeans("k_B")/(24*3600);
@@ -73,11 +80,13 @@ lognormalMu = log(mu^2/(sqrt(mu^2 + sigma^2)));
 lognormalSigma = log(1+(sigma^2/mu^2));
 
 pd = makedist('lognormal',lognormalMu,lognormalSigma);
-t=truncate(pd,0.1/(24*3600), inf);
+t=truncate(pd,0.05/(24*3600), inf);
 k_B = random(t,N,1);
 
 %% clearance rate from blood (k_L = c)
 
+% input: /day
+% convert to: /s
 if isKey(paramMeans,"k_L") == 1
     mu = paramMeans("k_L")/(24*3600);
 elseif isKey(paramMeans,"c") == 1
@@ -166,23 +175,97 @@ T0_T = random(t,N,1);
 % t=truncate(pd,1*10^(-10),inf);
 % D_vS = random(t,N,1);
 
-%Initial Drug Concentration
+% Surface Area
+% input: cm2
 
-if isKey(paramMeans,"C_G0") == 1
-    C_G0 = paramMeans("C_G0")*ones(N,1);
+if isKey(paramMeans,"SA") == 1
+    SA = paramMeans("SA")*ones(N,1);
 else
-    C_G0 = zeros(N,1);
+    SA = zeros(N,1);
 end
 
-%Drug application vs HIV exposure delay T_VD 
+% Volume of vaginal fluid
+% input: cm3
+
+if isKey(paramMeans,"Vf") == 1
+    Vf = paramMeans("Vf")*ones(N,1);
+else
+    Vf = zeros(N,1);
+end
+
+% Volume of semen
+% input: cm3
+
+if isKey(paramMeans,"Vs") == 1
+    Vs = paramMeans("Vs")*ones(N,1);
+else
+    Vs = zeros(N,1);
+end
+
+% Volume of drug gel 
+% input: cm3
+
+if isKey(paramMeans,"Vs") == 1
+    Vg = paramMeans("Vg")*ones(N,1);
+else
+    Vg = zeros(N,1);
+end
+
+% Initial Drug Concentration
+
+if isKey(paramMeans,"C0") == 1
+    C0 = paramMeans("C0")*ones(N,1);
+else
+    C0 = zeros(N,1);
+end
+
+% Drug application vs HIV exposure delay T_VD 
+% input: hrs, 
+% convert to: s
 
 if isKey(paramMeans,"T_VD") == 1
-    T_VD = paramMeans("T_VD")*ones(N,1);
+    T_VD = (paramMeans("T_VD")*3600)*ones(N,1); 
 else
     T_VD = zeros(N,1);
 end
 
-newparams = table(V_0,h_E,rho,k_B,k_L,beta,w,T0_B,T0_T,C_G0,T_VD);
+% Menstrual cycle phase (0 = midcycle, 1 = follicular, 2 = luteal)
+
+if isKey(paramMeans,"phase") == 1
+    phase = paramMeans("phase")*ones(N,1);
+else
+    phase = zeros(N,1);
+end
+
+% Drug type (0 = none, 1 = gel, 2 = IVR)
+
+if isKey(paramMeans,"drugType") == 1
+    if (isKey(paramMeans,"C0") == 1 && paramMeans("C0") == 0 && paramMeans("drugType") ~= 0)
+        drugType = 0*ones(N,1);
+        fprintf('WARNING: Incongruence, Inputted C0 = %d, but drugType = %d. Using drugType = 0\n', paramMeans("C0"), paramMeans("drugType"));
+    else
+        drugType = paramMeans("drugType")*ones(N,1);
+    end
+else
+    drugType = zeros(N,1);
+end
+
+
+% T_VD = paramMeans("T_VD")*ones(N,1);
+
+% if isKey(paramMeans,"isRandomT_VD") == 1 && isKey(paramMeans,"T_VD") == 1
+%     if paramMeans("isRandomT_VD") == 0
+%         T_VD = paramMeans("T_VD")*ones(N,1);
+%     else
+%         % sample from uniform distribution between -6hrs and 6hrs
+%         T_VD = -6 + (6+6)*rand(N,1);
+%     end
+% else
+%     T_VD = zeros(N,1);
+% end
+
+
+newparams = table(V_0,SA,h_E,rho,k_B,k_L,beta,w,T0_B,T0_T,Vf,Vs,Vg,C0,T_VD,phase,drugType);
 
 if overwrite == 1
     writetable(newparams,filename,'WriteMode','overwritesheet',...

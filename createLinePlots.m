@@ -1,4 +1,4 @@
-function createLinePlots(t, Mesh, T_params, vir, drug, drugdp, chem, tar_cell, inf_cell, vir_b, drug_b, drugdp_b, tar_b, inf_b, settings)
+function createLinePlots(t, Mesh, T_params, vir, drug, drugdp, chem, tar_cell, inf_cell, vir_b, drug_b, drugdp_b, tar_b, inf_b, drugType, settings)
 
     lineWidth = 12;
     if t(end)/24 > 18
@@ -7,8 +7,8 @@ function createLinePlots(t, Mesh, T_params, vir, drug, drugdp, chem, tar_cell, i
         tend = t(end)/24;
     end
 
-    IC50 = 180;
-    calcQ = @(c) 1./(1+(IC50./(c)));
+    IC50 = 90;
+    calcQ = @(c) 1./(1+(IC50./(c))); 
     %% LOCAL - PLOTTING VIRAL LOAD VS. TIME
     if settings("showVvsTime") == 1
         f = figure();
@@ -107,10 +107,19 @@ function createLinePlots(t, Mesh, T_params, vir, drug, drugdp, chem, tar_cell, i
     %% LOCAL - PLOTTING DRUG VS. TIME
 
     if settings("showDvsTime") == 1
-        DL_avg = (trapz(drug(1:Mesh.numL,:),1) / Mesh.numL)';
-        DT_avg = (trapz(drug(Mesh.numL+1:Mesh.numX,:),1) / Mesh.numT)';
-        DE_avg = (trapz(drug(Mesh.numL+1:Mesh.numL+Mesh.numE,:),1) / Mesh.numE)';
-        DS_avg = (trapz(drug(Mesh.numL+Mesh.numE+1:Mesh.numX,:),1) / Mesh.numS)';
+        if (drugType == 0 || drugType == 1)
+            DR_avg = [];
+            DL_avg = (trapz(drug(1:Mesh.numL,:),1) / Mesh.numL)';
+            DT_avg = (trapz(drug(Mesh.numL+1:Mesh.numX,:),1) / Mesh.numT)';
+            DE_avg = (trapz(drug(Mesh.numL+1:Mesh.numL+Mesh.numE,:),1) / Mesh.numE)';
+            DS_avg = (trapz(drug(Mesh.numL+Mesh.numE+1:Mesh.numX,:),1) / Mesh.numS)';
+        else
+            DR_avg = (trapz(drug(1:Mesh.numR,:),1) / Mesh.numR)';
+            DL_avg = (trapz(drug(Mesh.numR+1:Mesh.numR+Mesh.numL,:),1) / Mesh.numL)';
+            DT_avg = (trapz(drug(Mesh.numR+Mesh.numL+1:Mesh.numR+Mesh.numX,:),1) / Mesh.numT)';
+            DE_avg = (trapz(drug(Mesh.numR+Mesh.numL+1:Mesh.numR+Mesh.numL+Mesh.numE,:),1) / Mesh.numE)';
+            DS_avg = (trapz(drug(Mesh.numR+Mesh.numL+Mesh.numE+1:Mesh.numR+Mesh.numX,:),1) / Mesh.numS)';
+        end
 
         % f = figure();
         % ax = axes('Parent',f);
@@ -135,21 +144,25 @@ function createLinePlots(t, Mesh, T_params, vir, drug, drugdp, chem, tar_cell, i
         ax = axes('Parent',f);
         cm = getCustomColormap(3);
         plot(t,DS_avg*(1e3/287.213),'LineWidth',lineWidth,'color',cm(1,:))
-        hold on
-        plot(t,drug_b*(1e3/287.213),'LineWidth',lineWidth,'color',cm(2,:))
+
+        %hold on
+        %plot(t,drug_b*(1e3/287.213),'LineWidth',lineWidth,'color',cm(2,:))
+
         %ylim([0,max(CS_avg)])
         %set(gca,'YScale','log');
         %legend('Stroma')
-        legend('Stroma','Blood')
+        %legend('Stroma','Blood')
         xlabel('Time (hrs)','FontSize',40,'FontWeight','Bold')
         %ylabel('TFV in Stroma (ng ml^{-1})','FontSize',40,'FontWeight','Bold')
         ylabel('Conc (fmol/mg)','FontSize',40,'FontWeight','Bold')
-        title('TFV','FontSize',40,'FontWeight','Bold')
+        %title('TFV','FontSize',40,'FontWeight','Bold')
+        title('TFV in Stroma','FontSize',40,'FontWeight','Bold')
         set(gca,'FontSize',40)
         xlim([0,24])
         %yticks([1e-2,1e0,1e2,1e4,1e6])
-        yticks([0,0.5e5,1e5,1.5e5,2e5,2.5e5])
-        ylim([0,2.5e5])
+        %yticks([0,0.5e5,1e5,1.5e5,2e5,2.5e5])
+        yticks([0,4e5,8e5,12e5])
+        ylim([0,12e5])
     end
 
     if settings("showDdpvsTime") == 1
@@ -162,16 +175,20 @@ function createLinePlots(t, Mesh, T_params, vir, drug, drugdp, chem, tar_cell, i
         cm = getCustomColormap(2);
         %plot(ax,t,DdpS_avg,'LineWidth',10,'color',cm(2,:));
         plot(ax,t,DdpS_avg*(1e3/447.17),'LineWidth',lineWidth,'color',cm(1,:));
-        hold on
-        plot(ax,t,drugdp_b*(1e3/447.17),'LineWidth',lineWidth,'color',cm(2,:));
+        %hold on
+        %plot(ax,t,drugdp_b*(1e3/447.17),'LineWidth',lineWidth,'color',cm(2,:));
         xlabel('Time (hrs)','FontSize',40,'FontWeight','Bold')
         %ylabel('TFV-DP in Stroma (ng ml^{-1})','FontSize',40,'FontWeight','Bold')
         ylabel('Conc (fmol/mg)','FontSize',40,'FontWeight','Bold')
-        title('TFV-DP','FontSize',40,'FontWeight','Bold')
-        legend('Stroma','Blood')
-        ylim([0,2000])
+        %title('TFV-DP','FontSize',40,'FontWeight','Bold')
+        title('TFV-DP in Stroma','FontSize',40,'FontWeight','Bold')
+        %legend('Stroma','Blood')
+        %ylim([0,2000])
+        %ylim([0,15000])
         %yticks([1e-10,1e-5,1e0,1e5])
-        yticks([0,500,1000,1500,2000])
+        %yticks([0,500,1000,1500,2000])
+        %yticks([0,5000,10000,15000])
+
         set(gca,'FontSize',40)
         xlim([0,24])
     end
@@ -209,22 +226,24 @@ function createLinePlots(t, Mesh, T_params, vir, drug, drugdp, chem, tar_cell, i
 
     if settings("showVvsTime_b") == 1
         f = figure();
-        f.Position = [383,363,793,627];
+        %f.Position = [383,363,793,627];
+        f.Position = [383,550,744,440];
         ax = axes('Parent',f);
-        cm = getCustomColormap(1);
-        semilogy(ax, t/24, vir_b,'LineWidth',lineWidth,'color',cm(1,:))
+        cm = getCustomColormap(3);
+        semilogy(ax, t/24, vir_b,'LineWidth',lineWidth,'color',cm(3,:))
         %plot(ax, t/24, vir_b,'LineWidth',10)
         xlabel(ax, 'Time (days)','FontSize',40,'FontWeight','Bold')
         ylabel(ax, 'Conc (vir/ml)','FontSize',40,'FontWeight','Bold')
-        title(ax, 'Viral Load in Blood','FontSize',40,'FontWeight','Bold')
+        %title(ax, 'Viral Load in Blood','FontSize',40,'FontWeight','Bold')
         set(ax,'FontSize',40)
-        xlim([0, tend])
+        xlim([0, 80])
         %ylim([1e-1,max(max(vir_b))])
-        ylim([1e-4,1e7])
-        yticks([1e-4,1e-2,1e0,1e2,1e4,1e6])
+        %ylim([1e-4,1e7])
+        ylim([1e2,1e8])
+        yticks([1e3,1e5,1e7])
     end
 
-    %% SYSTEMIC - PLOTTING D VS TIME
+    %% SYSTEMIC - PLOTTING DRUG VS TIME
 
     if settings("showDvsTime") == 1
         conc = 1e-4:1e0:1e6;
@@ -256,6 +275,7 @@ function createLinePlots(t, Mesh, T_params, vir, drug, drugdp, chem, tar_cell, i
         ylabel('Conc (fmol/mg)','FontSize',40,'FontWeight','Bold')
         set(gca,'FontSize',40)
         xlim([0,24])
+        ylim([0,40])
     end
     if settings("showDdpvsTime_b") == 1
         % Drug: TFV-DP
